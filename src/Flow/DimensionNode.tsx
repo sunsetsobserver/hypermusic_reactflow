@@ -5,12 +5,13 @@ const DimensionNode: React.FC<any> = ({ isConnectable, data }) => {
     const initialLabel = data && data.label ? data.label : 'Dimension';
     const [isEditingDimension, setIsEditingDimension] = useState(false);
     const [dimensionName, setDimensionName] = useState(initialLabel);
+    const [dimensionValues, setDimensionValues] = useState('[]'); // Added state for dimension values
 
     const handleDimensionNameSubmit = () => {
         if (dimensionName.trim() !== '') {
             setIsEditingDimension(false);
             if (data && data.onChange) {
-                data.onChange(dimensionName);
+                data.onChange(dimensionName, dimensionValues); // Pass dimensionValues as well
             }
         }
     };
@@ -27,7 +28,12 @@ const DimensionNode: React.FC<any> = ({ isConnectable, data }) => {
                 <div onClick={() => setIsEditingDimension(true)}>{dimensionName}</div>
             )}
             <br/>
-            <input type="text" placeholder="Enter dimension values in []" />
+            <input 
+                type="text" 
+                placeholder="Enter dimension values in []" 
+                value={dimensionValues}
+                onChange={(e) => setDimensionValues(e.target.value)}
+            />
             <br />
             <Handle type="source" position={Position.Bottom} style={{ background: '#555' }} isConnectable={isConnectable} />
         </div>
