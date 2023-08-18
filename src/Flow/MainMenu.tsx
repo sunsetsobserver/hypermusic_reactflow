@@ -7,14 +7,13 @@ interface MainMenuProps {
 const MainMenu: React.FC<MainMenuProps> = ({ setNodes }) => {
     
     const handleSpaceCreation = () => {
-        const newNode = {
+        const newSpaceNode = {
             id: (Math.random() * 1000).toString(),
-            type: 'input',
-            data: { label: 'Space' },
-            position: { x: 300, y: 100 },
+            type: 'space',
+            position: { x: 150, y: 150 },
         };
-        setNodes((prevNodes) => [...prevNodes, newNode]);
-    }
+        setNodes((prevNodes) => [...prevNodes, newSpaceNode]);
+    }    
 
     const handleTrajectoryCreation = () => {
         const newNode = {
@@ -45,6 +44,16 @@ const MainMenu: React.FC<MainMenuProps> = ({ setNodes }) => {
         };
         setNodes((prevNodes) => [...prevNodes, newNode]);
     }
+
+    const handlePerformativeTransactionCreation = () => {
+        const newNode = {
+            id: (Math.random() * 1000).toString(),
+            type: 'default',
+            data: { label: 'Performative Transaction' },
+            position: { x: 100, y: 100 },
+        };
+        setNodes((prevNodes) => [...prevNodes, newNode]);
+    }
   
     return (
       <div className="main-menu">
@@ -53,6 +62,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ setNodes }) => {
         <button onClick={handleTrajectoryCreation}>Create Trajectory</button><br></br>
         <button onClick={handleTokenCreation}>Create Token</button><br></br>
         <button onClick={handleObjectCreation}>Create Object</button><br></br>
+        <button onClick={handlePerformativeTransactionCreation}>Create Performative Transaction</button><br></br>
       </div>
     );
   }
