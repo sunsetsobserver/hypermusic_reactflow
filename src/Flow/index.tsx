@@ -14,7 +14,6 @@ import MainMenu from './MainMenu';
 import SpaceNode from './SpaceNode';
 import DimensionNode from './DimensionNode';
 
-// Importing styles from the lib
 import 'reactflow/dist/style.css';
 import './Flow.css';
 
@@ -25,7 +24,6 @@ const nodeTypes = {
 };
 
 const initialNodes: Node[] = [];
-
 const initialEdges: Edge[] = [];
 
 function Flow() {
@@ -35,21 +33,15 @@ function Flow() {
     (params: Connection | Edge) => {
       setEdges((eds) => addEdge(params, eds));
   
-      console.log("Connection made:", params);
-  
       const sourceNode = nodes.find((node) => node.id === params.source);
       const targetNode = nodes.find((node) => node.id === params.target);
   
-      console.log("Source Node:", sourceNode);
-      console.log("Target Node:", targetNode);
-  
-      if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data) {
-        const updatedDimensions = [...targetNode.data.dimensions, sourceNode.data.dimension];
+      if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data && sourceNode.data.dimension) {
+        const updatedDimensions = [...(targetNode.data.dimensions || []), sourceNode.data.dimension];
         const updatedNode = {
           ...targetNode,
           data: { dimensions: updatedDimensions }
         };
-        console.log("Updated Node:", updatedNode);
         setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
       }
     },
@@ -76,6 +68,7 @@ function Flow() {
 }
 
 export default Flow;
+
 
 
 
