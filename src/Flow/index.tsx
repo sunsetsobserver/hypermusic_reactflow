@@ -32,9 +32,23 @@ function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect = useCallback(
-    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  );
+    (params: Connection | Edge) => {
+      setEdges((eds) => addEdge(params, eds));
+  
+      const sourceNode = nodes.find((node) => node.id === params.source);
+      const targetNode = nodes.find((node) => node.id === params.target);
+  
+      if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data) {
+        const updatedDimensions = [...targetNode.data.dimensions, sourceNode.data.dimension];
+        const updatedNode = {
+          ...targetNode,
+          data: { dimensions: updatedDimensions }
+        };
+        setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
+      }
+    },
+    [setEdges, nodes, setNodes]
+  );  
 
   return (
     <div className="Flow">
