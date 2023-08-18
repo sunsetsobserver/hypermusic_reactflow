@@ -12,6 +12,7 @@ import ReactFlow, {
 import CustomNode from './CustomNode';
 import MainMenu from './MainMenu';
 import SpaceNode from './SpaceNode';
+import DimensionNode from './DimensionNode';
 
 
 // Importing styles from the lib
@@ -21,6 +22,7 @@ import './Flow.css';
 const nodeTypes = {
   custom: CustomNode,
   space: SpaceNode,
+  dimension: DimensionNode,
 };
 
 const initialNodes: Node[] = [
