@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import ReactFlow, {
   addEdge,
   useNodesState,
@@ -14,7 +14,6 @@ import MainMenu from './MainMenu';
 import SpaceNode from './SpaceNode';
 import DimensionNode from './DimensionNode';
 
-
 // Importing styles from the lib
 import 'reactflow/dist/style.css';
 import './Flow.css';
@@ -25,14 +24,11 @@ const nodeTypes = {
   dimension: DimensionNode,
 };
 
-const initialNodes: Node[] = [
-];
+const initialNodes: Node[] = [];
 
-const initialEdges: Edge[] = [
-];
+const initialEdges: Edge[] = [];
 
 function Flow() {
-
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const onConnect = useCallback(
@@ -42,14 +38,24 @@ function Flow() {
 
   return (
     <div className="Flow">
-            <ReactFlow nodes={nodes} onNodesChange={onNodesChange} edges={edges} onEdgesChange={onEdgesChange} onConnect={onConnect} fitView nodeTypes={nodeTypes} >
-                <Panel position="top-left">
-                    <MainMenu setNodes={setNodes} />
-                </Panel>
-            </ReactFlow>
+      <ReactFlow
+        nodes={nodes}
+        onNodesChange={onNodesChange}
+        edges={edges}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        fitView
+        nodeTypes={nodeTypes}
+      >
+        <Panel position="top-left">
+          <MainMenu setNodes={setNodes} />
+        </Panel>
+      </ReactFlow>
     </div>
   );
 }
 
 export default Flow;
+
+
 
