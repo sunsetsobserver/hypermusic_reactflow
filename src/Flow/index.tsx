@@ -35,8 +35,13 @@ function Flow() {
     (params: Connection | Edge) => {
       setEdges((eds) => addEdge(params, eds));
   
+      console.log("Connection made:", params);
+  
       const sourceNode = nodes.find((node) => node.id === params.source);
       const targetNode = nodes.find((node) => node.id === params.target);
+  
+      console.log("Source Node:", sourceNode);
+      console.log("Target Node:", targetNode);
   
       if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data) {
         const updatedDimensions = [...targetNode.data.dimensions, sourceNode.data.dimension];
@@ -44,12 +49,13 @@ function Flow() {
           ...targetNode,
           data: { dimensions: updatedDimensions }
         };
+        console.log("Updated Node:", updatedNode);
         setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
       }
     },
     [setEdges, nodes, setNodes]
-  );  
-
+  );
+  
   return (
     <div className="Flow">
       <ReactFlow
