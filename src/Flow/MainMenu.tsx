@@ -2,18 +2,21 @@ import React from 'react';
 
 interface MainMenuProps {
     setNodes: (callback: (nodes: any[]) => any[]) => void;
+    handleDimensionChange: (dimensionName: string, dimensionValues: string) => void;
 }
 
-const MainMenu: React.FC<MainMenuProps> = ({ setNodes }) => {
+const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange }) => {
         
-    const handleDimensionCreation = () => {
-        const newNode = {
+    const handleAddDimension = () => {
+        const newDimensionNode = {
             id: (Math.random() * 1000).toString(),
             type: 'dimension',
-            position: { x: 250, y: 250 },
+            position: { x: 0, y: 0 },
+            data: { onChange: handleDimensionChange } // Add this line
         };
-        setNodes((prevNodes) => [...prevNodes, newNode]);
-    }
+        setNodes((ns) => ns.concat(newDimensionNode));
+    };
+    
     
     const handleSpaceCreation = () => {
         const newSpaceNode = {
@@ -67,7 +70,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ setNodes }) => {
     return (
       <div className="main-menu">
         <h2>Main Menu</h2>
-        <button onClick={handleDimensionCreation}>Create Dimension</button><br></br>
+        <button onClick={handleAddDimension}>Create Dimension</button><br></br>
         <button onClick={handleSpaceCreation}>Create Space</button><br></br>
         <button onClick={handleTrajectoryCreation}>Create Trajectory</button><br></br>
         <button onClick={handleTokenCreation}>Create Token</button><br></br>
