@@ -5,11 +5,13 @@ import { Handle, Position } from 'reactflow';
 const DimensionNode: React.FC<any> = ({ id, isConnectable, data }) => {
     const initialLabel = data && data.label ? data.label : 'Dimension';
 
+    console.log("Data in DimensionNode:", data);
+
     const [isEditingDimension, setIsEditingDimension] = useState(false);
     const [dimensionName, setDimensionName] = useState(initialLabel);
     const [dimensionValues, setDimensionValues] = useState('[]'); // Added state for dimension values
 
-    function safeJSONParse(value: string, fallback: any = null) {
+    /* function safeJSONParse(value: string, fallback: any = null) {
         try {
           return JSON.parse(value);
         } catch (error) {
@@ -25,7 +27,16 @@ const DimensionNode: React.FC<any> = ({ id, isConnectable, data }) => {
                 data.onChange(id, dimensionName, safeJSONParse(dimensionValues, []));
             }
         }
-    };    
+    };    */ 
+
+    const handleDimensionNameSubmit = () => {
+        if (dimensionName.trim() !== '') {
+            setIsEditingDimension(false);
+            if (data && data.onChange) {
+                data.onChange(id, dimensionName, dimensionValues);
+            }
+        }
+    };
 
     console.log("DimensionNode Data:", {
         dimensionName: dimensionName,

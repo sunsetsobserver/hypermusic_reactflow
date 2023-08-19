@@ -9,26 +9,8 @@ const SpaceNode: React.FC<any> = ({ data }) => {
     const [renderKey, setRenderKey] = useState(Math.random());
     const prevDataRef = useRef(data);
 
-    // Ensure data is defined and dimensions is always an array
-    const dimensions = data?.dimensions || [];
+    console.log("SpaceNode Received Data:", data.dimensions);
 
-    console.log("SpaceNode Received Data:", dimensions);
-
-    function safeJSONParse(value: string, fallback: any = null) {
-        try {
-          return JSON.parse(value);
-        } catch (error) {
-          console.error("Failed to parse JSON:", value);
-          return fallback;
-        }
-    }
-  
-    // Create the combined object
-    const combinedDimensions = dimensions.reduce((acc: Record<string, any[]>, dimension: { dimensionName: string, dimensionValues: string }) => {
-        acc[dimension.dimensionName] = safeJSONParse(dimension.dimensionValues, []);
-        return acc;
-    }, {});
-    
     useEffect(() => {
         if (JSON.stringify(prevDataRef.current) !== JSON.stringify(data)) {
             setRenderKey(Math.random());
@@ -40,10 +22,10 @@ const SpaceNode: React.FC<any> = ({ data }) => {
         <div className="node spaceNode" key={renderKey}>
         <div className="node-title">Space</div>
         <div className="node-content">
-          {dimensions.length > 0 ? (
+          {Object.keys(data.dimensions).length > 0 ? (
             <div>
               <strong>Dimensions:</strong>
-              <pre>{JSON.stringify(combinedDimensions, null, 2)}</pre>
+              <pre>{JSON.stringify(data.dimensions, null, 2)}</pre>
             </div>
           ) : (
             <div>No dimensions connected.</div>

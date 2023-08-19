@@ -31,6 +31,7 @@ const initialEdges: Edge[] = [];
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
     const handleDimensionChange = (dimensionNodeId: string, dimensionName: string, dimensionValues: string) => {
+      console.log("handleDimensionChange triggered", {dimensionNodeId, dimensionName, dimensionValues}); // add this line
       setNodes((prevNodes) => {
           return prevNodes.map((node) => {
               // Check if there's an edge connecting this node to the edited DimensionNode
@@ -57,28 +58,30 @@ const initialEdges: Edge[] = [];
 
   const onConnect = (params: Connection | Edge) => {
     setEdges((eds) => addEdge(params, eds));
+
     setNodes((prevNodes) => {
-        const updatedNodes = prevNodes.map((node) => {
-            if (node.id === params.target) {
-                const sourceNode = prevNodes.find((n) => n.id === params.source);
-                if (sourceNode && sourceNode.data) {
-                    const existingDimensions = node.data?.dimensions || [];
-                    
-                    const updatedDimensions = existingDimensions.concat({
-                        dimensionName: sourceNode.data.dimensionName,
-                        dimensionValues: sourceNode.data.dimensionValues
-                    });
+        const sourceNode = prevNodes.find((n) => n.id === params.source);
+        if (sourceNode && sourceNode.data) {
+            const updatedNodes = prevNodes.map((node) => {
+                if (node.id === params.target) {
+                    const existingDimensions = node.data?.dimensions || {};
+                    const updatedDimensions = {
+                        ...existingDimensions,
+                        [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues),
+                    };
                     return {
                         ...node,
                         data: { dimensions: updatedDimensions }
                     };
                 }
-            }
-            return node;
-        });
-        return updatedNodes; // Return the updated nodes array
+                return node;
+            });
+            return updatedNodes;
+        }
+        return prevNodes; // If sourceNode is not found, return the original array
     });
   };
+
 
   return (
     <div className="Flow">
