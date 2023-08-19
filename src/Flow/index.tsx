@@ -1,10 +1,7 @@
-import React, { useCallback } from 'react';
 import ReactFlow, {
-  addEdge,
   useNodesState,
   useEdgesState,
   Panel,
-  type Connection,
   type Edge,
   type Node,
 } from 'reactflow';
@@ -30,37 +27,28 @@ function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = useCallback(
-    (params: Connection | Edge) => {
-      setEdges((eds) => addEdge(params, eds));
+  const onConnect = (params: { source: string | null; target: string | null }) => {
+    if (!params.source || !params.target) return;
+    const sourceNode = nodes.find((n) => n.id === params.source);
+    const targetNode = nodes.find((n) => n.id === params.target);
+
+    if (!sourceNode || !targetNode) return;
+
+    if (targetNode.type === 'space' && sourceNode.data) {
+      const updatedDimensions = targetNode.data.dimensions || [];
+      updatedDimensions.push({
+        dimensionName: sourceNode.data.dimensionName,
+        dimensionValues: sourceNode.data.dimensionValues
+      });
   
-      const sourceNode = nodes.find((node) => node.id === params.source);
-      const targetNode = nodes.find((node) => node.id === params.target);
+      const updatedNode = {
+        ...targetNode,
+        data: { dimensions: updatedDimensions }
+      };
   
-      if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data) {
-        const updatedDimensions = {
-          ...(targetNode.data.dimensions || {}),
-          [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues)
-        };
-        const updatedNode = {
-          ...targetNode,
-          data: { dimensions: updatedDimensions }
-        };
-        setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
-
-        console.log("Updated Dimensions:", updatedDimensions);
-        console.log("Updated Node:", updatedNode);
-
-      }
-
-      console.log("onConnect triggered");
-      console.log("Source Node:", sourceNode);
-      console.log("Target Node:", targetNode);
-    },
-    [setEdges, nodes, setNodes]
-
-
-  );
+      setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode as Node : n)));
+    }
+  };  
   
   return (
     <div className="Flow">
