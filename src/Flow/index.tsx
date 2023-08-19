@@ -46,27 +46,30 @@ function Flow() {
 };
 
 
-  const onConnect = useCallback(
-    (params: Connection | Edge) => {
-      setEdges((eds) => addEdge(params, eds));
-  
-      const sourceNode = nodes.find((node) => node.id === params.source);
-      const targetNode = nodes.find((node) => node.id === params.target);
-  
-      if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data) {
+  const onConnect = (params: Connection | Edge) => {
+    setEdges((eds) => addEdge(params, eds));
+
+    const sourceNode = nodes.find((node) => node.id === params.source);
+    const targetNode = nodes.find((node) => node.id === params.target);
+
+    if (targetNode && targetNode.type === 'space' && sourceNode && sourceNode.data) {
+        // Ensure that targetNode.data exists and has a dimensions property
+        const existingDimensions = targetNode.data?.dimensions || {};
+
         const updatedDimensions = {
-          ...(targetNode.data.dimensions || {}),
-          [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues)
+            ...existingDimensions,
+            [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues)
         };
+
         const updatedNode = {
-          ...targetNode,
-          data: { dimensions: updatedDimensions }
+            ...targetNode,
+            data: { dimensions: updatedDimensions }
         };
+
         setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
-      }
-    },
-    [setEdges, nodes, setNodes]
-);
+    }
+  };
+
 
   return (
     <div className="Flow">

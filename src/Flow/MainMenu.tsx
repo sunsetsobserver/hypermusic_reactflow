@@ -12,7 +12,7 @@ const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange }) 
             id: (Math.random() * 1000).toString(),
             type: 'dimension',
             position: { x: 0, y: 0 },
-            data: { onChange: handleDimensionChange } // Add this line
+            data: { dimensionName: 'DefaultName', dimensionValues: '[]', onChange: handleDimensionChange }
         };
         setNodes((ns) => ns.concat(newDimensionNode));
     };
