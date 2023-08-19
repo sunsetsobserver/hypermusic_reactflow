@@ -50,7 +50,7 @@
 
 .spaceNode {
   width: 300px; /* Adjust as needed */
-  height: 400px; /* Adjust as needed */
+  height: auto; /* Adjust as needed */
   border: 1px solid #ccc;
   padding: 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
