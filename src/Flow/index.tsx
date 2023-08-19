@@ -48,13 +48,20 @@ function Flow() {
         };
         setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
       }
+
+      console.log("onConnect triggered");
+      console.log("Source Node:", sourceNode);
+      console.log("Target Node:", targetNode);
     },
     [setEdges, nodes, setNodes]
+
+
   );
   
   return (
     <div className="Flow">
       <ReactFlow
+        key={Math.random()}  
         nodes={nodes}
         onNodesChange={onNodesChange}
         edges={edges}
