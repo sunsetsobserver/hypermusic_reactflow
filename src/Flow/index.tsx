@@ -31,18 +31,21 @@ function Flow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const handleDimensionChange = (dimensionName: string, dimensionValues: string) => {
-    console.log("handleDimensionChange called with:", dimensionName, dimensionValues);
     const spaceNode = nodes.find((node) => node.type === 'space');
     if (spaceNode) {
+        const parsedDimensionValues = JSON.parse(dimensionValues);
         const updatedDimensions = {
             ...(spaceNode.data.dimensions || {}),
-            [dimensionName]: JSON.parse(dimensionValues)
+            [dimensionName]: parsedDimensionValues
         };
         const updatedNode = {
             ...spaceNode,
-            data: { dimensions: updatedDimensions }
+            data: {
+                ...spaceNode.data, // Keep the existing data
+                dimensions: updatedDimensions // Update only the dimensions
+            }
         };
-        console.log("Updated SpaceNode:", updatedNode);
+        console.log("Updated SpaceNode:", updatedNode); // Log the updated node for debugging
         setNodes((ns) => ns.map((n) => (n.id === spaceNode.id ? updatedNode : n)));
     }
   };
