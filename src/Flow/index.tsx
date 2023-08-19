@@ -1,4 +1,4 @@
-//index.tsx
+import { useEffect } from 'react';
 import ReactFlow, {
   addEdge,
   useNodesState,
@@ -8,7 +8,6 @@ import ReactFlow, {
   type Edge,
   type Node,
 } from 'reactflow';
-
 import CustomNode from './CustomNode';
 import MainMenu from './MainMenu';
 import SpaceNode from './SpaceNode';
@@ -26,62 +25,95 @@ const nodeTypes = {
 const initialNodes: Node[] = [];
 const initialEdges: Edge[] = [];
 
-  function Flow() {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+function Flow() {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-    const handleDimensionChange = (dimensionNodeId: string, dimensionName: string, dimensionValues: string) => {
-      console.log("handleDimensionChange triggered", {dimensionNodeId, dimensionName, dimensionValues}); // add this line
-      setNodes((prevNodes) => {
-          return prevNodes.map((node) => {
-              // Check if there's an edge connecting this node to the edited DimensionNode
-              const isConnected = edges.some(edge => edge.source === dimensionNodeId && edge.target === node.id);
-              if (node.type === 'space' && isConnected) {
-                  const parsedDimensionValues = JSON.parse(dimensionValues);
-                  const updatedDimensions = {
-                      ...(node.data.dimensions || {}),
-                      [dimensionName]: parsedDimensionValues
-                  };
-                  return {
-                      ...node,
-                      data: {
-                          ...node.data,
-                          dimensions: updatedDimensions
-                      }
-                  };
-              }
-              return node;
-          });
-      });
-  };
-  
-
-  const onConnect = (params: Connection | Edge) => {
-    setEdges((eds) => addEdge(params, eds));
-
+  const updateNodeData = (nodeId: string, newData: any) => {
     setNodes((prevNodes) => {
-        const sourceNode = prevNodes.find((n) => n.id === params.source);
-        if (sourceNode && sourceNode.data) {
-            const updatedNodes = prevNodes.map((node) => {
-                if (node.id === params.target) {
-                    const existingDimensions = node.data?.dimensions || {};
-                    const updatedDimensions = {
-                        ...existingDimensions,
-                        [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues),
-                    };
-                    return {
-                        ...node,
-                        data: { dimensions: updatedDimensions }
-                    };
-                }
-                return node;
-            });
-            return updatedNodes;
+      const nodesCopy = [...prevNodes];
+      return nodesCopy.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              ...newData
+            }
+          };
         }
-        return prevNodes; // If sourceNode is not found, return the original array
+        return node;
+      });
+    });
+    const updatedDimensionNode = nodes.find(n => n.id === nodeId);
+    console.log("Updated DimensionNode in main state:", updatedDimensionNode);
+  };
+
+  const handleDimensionChange = (dimensionNodeId: string, dimensionName: string, dimensionValues: string) => {
+    setNodes(prevNodes => {
+      const nodesCopy = [...prevNodes];
+      const relatedDimensionNode = nodesCopy.find(n => n.id === dimensionNodeId);
+
+      if (!relatedDimensionNode) {
+        console.error("DimensionNode not found!");
+        return prevNodes;
+      }
+
+      return nodesCopy.map(node => {
+        const isConnected = edges.some(edge => edge.source === dimensionNodeId && edge.target === node.id);
+        
+        if (node.type === 'space' && isConnected) {
+          const parsedDimensionValues = JSON.parse(dimensionValues);
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              dimensions: {
+                ...(node.data.dimensions || {}),
+                [dimensionName]: parsedDimensionValues
+              }
+            }
+          };
+        }
+        return node;
+      });
     });
   };
 
+  const onConnect = (params: Connection | Edge) => {
+    if (params.sourceHandle === "dimensionHandle" && params.targetHandle === "spaceHandle") {
+      setEdges((eds) => {
+        return addEdge(params, eds);
+      });
+
+      setNodes((prevNodes) => {
+        const nodesCopy = [...prevNodes];
+        const sourceNode = nodesCopy.find((n) => n.id === params.source);
+
+        if (sourceNode && sourceNode.data) {
+          return nodesCopy.map((node) => {
+            if (node.id === params.target) {
+              const existingDimensions = node.data?.dimensions || {};
+              const updatedDimensions = {
+                ...existingDimensions,
+                [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues)
+              };
+              return {
+                ...node,
+                data: { dimensions: updatedDimensions }
+              };
+            }
+            return node;
+          });
+        }
+        return nodesCopy;
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log("Nodes state changed:", nodes);
+  }, [nodes]);
 
   return (
     <div className="Flow">
@@ -95,7 +127,7 @@ const initialEdges: Edge[] = [];
         nodeTypes={nodeTypes}
       >
         <Panel position="top-left">
-          <MainMenu setNodes={setNodes} handleDimensionChange={handleDimensionChange} />
+          <MainMenu setNodes={setNodes} handleDimensionChange={handleDimensionChange} updateNodeData={updateNodeData} />
         </Panel>
       </ReactFlow>
     </div>

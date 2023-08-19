@@ -4,19 +4,23 @@ import React from 'react';
 interface MainMenuProps {
     setNodes: (callback: (nodes: any[]) => any[]) => void;
     handleDimensionChange: (dimensionNodeId: string, dimensionName: string, dimensionValues: string) => void;
+    updateNodeData: (nodeId: string, newData: any) => void;
 }
 
-
-const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange }) => {
+const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange, updateNodeData }) => {
         
     const handleAddDimension = () => {
         const newDimensionNode = {
             id: (Math.random() * 1000).toString(),
             type: 'dimension',
             position: { x: 0, y: 0 },
-            data: { dimensionName: 'DefaultName', dimensionValues: '[]', onChange: handleDimensionChange }
+            data: { dimensionName: 'Dimension', dimensionValues: '[]', onChange: handleDimensionChange, updateNodeData }
         };
-        setNodes((ns) => ns.concat(newDimensionNode));
+        setNodes((prevNodes) => {
+            const updatedNodes = [...prevNodes, newDimensionNode];
+            console.log("Nodes after adding a new DimensionNode:", updatedNodes);  // Logging here
+            return updatedNodes;
+        });
     };
     
     const handleSpaceCreation = () => {

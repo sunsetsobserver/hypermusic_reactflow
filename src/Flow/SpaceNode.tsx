@@ -3,22 +3,23 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 
 const SpaceNode: React.FC<any> = ({ data }) => {
+    console.log("Data received by SpaceNode:", data);
+
     data = data || {};
-    console.log("SpaceNode data prop:", data);
 
     const [renderKey, setRenderKey] = useState(Math.random());
     const prevDataRef = useRef(data);
 
-    console.log("SpaceNode Received Data:", data.dimensions);
-
     useEffect(() => {
         if (JSON.stringify(prevDataRef.current) !== JSON.stringify(data)) {
+            console.log("Data changed, forcing re-render for SpaceNode.");  // Log this line
             setRenderKey(Math.random());
             prevDataRef.current = data;
         }
     }, [data]);
   
     return (
+    
         <div className="node spaceNode" key={renderKey}>
         <div className="node-title">Space</div>
         <div className="node-content">
@@ -31,8 +32,7 @@ const SpaceNode: React.FC<any> = ({ data }) => {
             <div>No dimensions connected.</div>
           )}
         </div>
-        <Handle type="target" position={Position.Left} style={{ background: '#555' }} />
-        <Handle type="source" position={Position.Right} style={{ background: '#555' }} />
+        <Handle type="target" position={Position.Left} id="spaceHandle" style={{ background: '#555' }} />
       </div>
     );
 };
