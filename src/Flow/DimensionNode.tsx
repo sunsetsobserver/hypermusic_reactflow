@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
-const DimensionNode: React.FC<any> = ({ isConnectable, data }) => {
+const DimensionNode: React.FC<any> = ({ id, isConnectable, data }) => {
     const initialLabel = data && data.label ? data.label : 'Dimension';
+
     const [isEditingDimension, setIsEditingDimension] = useState(false);
     const [dimensionName, setDimensionName] = useState(initialLabel);
     const [dimensionValues, setDimensionValues] = useState('[]'); // Added state for dimension values
@@ -21,10 +22,10 @@ const DimensionNode: React.FC<any> = ({ isConnectable, data }) => {
         if (dimensionName.trim() !== '') {
             setIsEditingDimension(false);
             if (data && data.onChange) {
-                data.onChange(dimensionName, safeJSONParse(dimensionValues, []));
+                data.onChange(id, dimensionName, safeJSONParse(dimensionValues, []));
             }
         }
-    };
+    };    
 
     console.log("DimensionNode Data:", {
         dimensionName: dimensionName,

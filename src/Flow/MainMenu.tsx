@@ -3,8 +3,9 @@ import React from 'react';
 
 interface MainMenuProps {
     setNodes: (callback: (nodes: any[]) => any[]) => void;
-    handleDimensionChange: (dimensionName: string, dimensionValues: string) => void;
+    handleDimensionChange: (dimensionNodeId: string, dimensionName: string, dimensionValues: string) => void;
 }
+
 
 const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange }) => {
         

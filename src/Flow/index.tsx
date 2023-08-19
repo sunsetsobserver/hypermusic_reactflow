@@ -30,11 +30,11 @@ const initialEdges: Edge[] = [];
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-    const handleDimensionChange = (dimensionName: string, dimensionValues: string) => {
+    const handleDimensionChange = (dimensionNodeId: string, dimensionName: string, dimensionValues: string) => {
       setNodes((prevNodes) => {
           return prevNodes.map((node) => {
               // Check if there's an edge connecting this node to the edited DimensionNode
-              const isConnected = edges.some(edge => edge.source === dimensionName && edge.target === node.id);
+              const isConnected = edges.some(edge => edge.source === dimensionNodeId && edge.target === node.id);
               if (node.type === 'space' && isConnected) {
                   const parsedDimensionValues = JSON.parse(dimensionValues);
                   const updatedDimensions = {
@@ -52,7 +52,8 @@ const initialEdges: Edge[] = [];
               return node;
           });
       });
-  };  
+  };
+  
 
   const onConnect = (params: Connection | Edge) => {
     setEdges((eds) => addEdge(params, eds));
