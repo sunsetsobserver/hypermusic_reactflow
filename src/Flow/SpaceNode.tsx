@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 
 const SpaceNode: React.FC<any> = ({ data }) => {
     const [renderKey, setRenderKey] = useState(Math.random());
+    const prevDataRef = useRef(data);
 
-    
     // Ensure data is defined and dimensions is always an array
     const dimensions = data?.dimensions || [];
 
@@ -17,7 +17,10 @@ const SpaceNode: React.FC<any> = ({ data }) => {
     }, {});
 
     useEffect(() => {
-        setRenderKey(Math.random());
+        if (JSON.stringify(prevDataRef.current) !== JSON.stringify(data)) {
+            setRenderKey(Math.random());
+            prevDataRef.current = data;
+        }
     }, [data]);
   
     return (
@@ -37,8 +40,9 @@ const SpaceNode: React.FC<any> = ({ data }) => {
         <Handle type="source" position={Position.Right} style={{ background: '#555' }} />
       </div>
     );
-  };
-  
-  export default SpaceNode;
+};
+
+export default SpaceNode;
+
   
   
