@@ -50,7 +50,8 @@ const initialEdges: Edge[] = [];
               return node;
           });
       });
-  };
+      console.log("Nodes after handleDimensionChange:", nodes);
+    };
 
   const onConnect = (params: Connection | Edge) => {
     setEdges((eds) => addEdge(params, eds));
@@ -74,6 +75,7 @@ const initialEdges: Edge[] = [];
             return node;
         });
     });
+    console.log("Nodes after onConnect:", nodes);
   };
 
   return (
