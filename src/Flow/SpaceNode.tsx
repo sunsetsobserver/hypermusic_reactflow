@@ -1,3 +1,4 @@
+//SpaceNode.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 
@@ -10,13 +11,22 @@ const SpaceNode: React.FC<any> = ({ data }) => {
     const dimensions = data?.dimensions || [];
 
     console.log("SpaceNode Received Data:", dimensions);
+
+    function safeJSONParse(value: string, fallback: any = null) {
+        try {
+          return JSON.parse(value);
+        } catch (error) {
+          console.error("Failed to parse JSON:", value);
+          return fallback;
+        }
+    }
   
     // Create the combined object
     const combinedDimensions = dimensions.reduce((acc: Record<string, any[]>, dimension: { dimensionName: string, dimensionValues: string }) => {
-      acc[dimension.dimensionName] = JSON.parse(dimension.dimensionValues);
-      return acc;
+        acc[dimension.dimensionName] = safeJSONParse(dimension.dimensionValues, []);
+        return acc;
     }, {});
-
+    
     useEffect(() => {
         if (JSON.stringify(prevDataRef.current) !== JSON.stringify(data)) {
             setRenderKey(Math.random());

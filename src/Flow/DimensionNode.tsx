@@ -1,3 +1,4 @@
+//DimensionNode.tsx
 import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
@@ -7,11 +8,20 @@ const DimensionNode: React.FC<any> = ({ isConnectable, data }) => {
     const [dimensionName, setDimensionName] = useState(initialLabel);
     const [dimensionValues, setDimensionValues] = useState('[]'); // Added state for dimension values
 
+    function safeJSONParse(value: string, fallback: any = null) {
+        try {
+          return JSON.parse(value);
+        } catch (error) {
+          console.error("Failed to parse JSON:", value);
+          return fallback;
+        }
+    }
+    
     const handleDimensionNameSubmit = () => {
         if (dimensionName.trim() !== '') {
             setIsEditingDimension(false);
             if (data && data.onChange) {
-                data.onChange(dimensionName, dimensionValues); // Pass dimensionValues as well
+                data.onChange(dimensionName, safeJSONParse(dimensionValues, []));
             }
         }
     };
