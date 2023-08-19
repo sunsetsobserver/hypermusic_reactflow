@@ -45,7 +45,6 @@ function Flow() {
     }
 };
 
-
   const onConnect = (params: Connection | Edge) => {
     setEdges((eds) => addEdge(params, eds));
 
@@ -56,10 +55,10 @@ function Flow() {
         // Ensure that targetNode.data exists and has a dimensions property
         const existingDimensions = targetNode.data?.dimensions || {};
 
-        const updatedDimensions = {
-            ...existingDimensions,
-            [sourceNode.data.dimensionName]: JSON.parse(sourceNode.data.dimensionValues)
-        };
+        const updatedDimensions = existingDimensions.concat({
+          dimensionName: sourceNode.data.dimensionName,
+          dimensionValues: JSON.parse(sourceNode.data.dimensionValues)
+        });
 
         const updatedNode = {
             ...targetNode,

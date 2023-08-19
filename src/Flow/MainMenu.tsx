@@ -23,7 +23,9 @@ const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange }) 
             id: (Math.random() * 1000).toString(),
             type: 'space',
             position: { x: 150, y: 150 },
+            data: { dimensions: [] }
         };
+        
         setNodes((prevNodes) => [...prevNodes, newSpaceNode]);
     }
 
