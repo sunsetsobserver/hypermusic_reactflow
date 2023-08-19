@@ -18,7 +18,6 @@ const MainMenu: React.FC<MainMenuProps> = ({ setNodes, handleDimensionChange }) 
         setNodes((ns) => ns.concat(newDimensionNode));
     };
     
-    
     const handleSpaceCreation = () => {
         const newSpaceNode = {
             id: (Math.random() * 1000).toString(),

@@ -43,7 +43,7 @@ function Flow() {
         };
         setNodes((ns) => ns.map((n) => (n.id === spaceNode.id ? updatedNode : n)));
     }
-};
+  };
 
   const onConnect = (params: Connection | Edge) => {
     setEdges((eds) => addEdge(params, eds));
@@ -57,8 +57,8 @@ function Flow() {
 
         const updatedDimensions = existingDimensions.concat({
           dimensionName: sourceNode.data.dimensionName,
-          dimensionValues: JSON.parse(sourceNode.data.dimensionValues)
-        });
+          dimensionValues: JSON.stringify(sourceNode.data.dimensionValues)
+        });        
 
         const updatedNode = {
             ...targetNode,
@@ -90,7 +90,3 @@ function Flow() {
 }
 
 export default Flow;
-
-
-
-
