@@ -56,6 +56,3 @@ const SpaceNode: React.FC<any> = ({ data }) => {
 };
 
 export default SpaceNode;
-
-  
-  
