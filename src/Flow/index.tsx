@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactFlow, {
   addEdge,
   useNodesState,
@@ -111,9 +111,57 @@ function Flow() {
     }
   };
 
+  const prevEdgesRef = useRef<Edge[]>([]);
+  const prevNodesRef = useRef<Node[]>([]);
+
   useEffect(() => {
-    console.log("Nodes state changed:", nodes);
+    const removedEdges = prevEdgesRef.current.filter(prevEdge => !edges.some(edge => edge.id === prevEdge.id));
+    removedEdges.forEach(removedEdge => {
+        if (removedEdge.sourceHandle === "dimensionHandle" && removedEdge.targetHandle === "spaceHandle") {
+            setNodes((prevNodes) => {
+                return prevNodes.map((node) => {
+                    if (node.id === removedEdge.target) {
+                        const updatedDimensions = { ...node.data.dimensions };
+                        const sourceNode = prevNodesRef.current.find(n => n.id === removedEdge.source);
+                        if (sourceNode) {
+                            delete updatedDimensions[sourceNode.data.dimensionName];
+                        }
+                        return {
+                            ...node,
+                            data: { dimensions: updatedDimensions }
+                        };
+                    }
+                    return node;
+                });
+            });
+        }
+    });
+    prevEdgesRef.current = edges;
+  }, [edges]);
+
+
+  useEffect(() => {
+    const removedNodes = prevNodesRef.current.filter(prevNode => !nodes.some(node => node.id === prevNode.id));
+    removedNodes.forEach(removedNode => {
+        if (removedNode.type === 'dimension') {
+            setNodes((prevNodes) => {
+                return prevNodes.map((node) => {
+                    if (node.type === 'space' && node.data.dimensions[removedNode.data.dimensionName]) {
+                        const updatedDimensions = { ...node.data.dimensions };
+                        delete updatedDimensions[removedNode.data.dimensionName];
+                        return {
+                            ...node,
+                            data: { dimensions: updatedDimensions }
+                        };
+                    }
+                    return node;
+                });
+            });
+        }
+    });
+    prevNodesRef.current = nodes;
   }, [nodes]);
+
 
   return (
     <div className="Flow">
