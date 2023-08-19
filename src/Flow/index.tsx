@@ -31,6 +31,7 @@ function Flow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const handleDimensionChange = (dimensionName: string, dimensionValues: string) => {
+    console.log("handleDimensionChange called with:", dimensionName, dimensionValues);
     const spaceNode = nodes.find((node) => node.type === 'space');
     if (spaceNode) {
         const updatedDimensions = {
@@ -41,6 +42,7 @@ function Flow() {
             ...spaceNode,
             data: { dimensions: updatedDimensions }
         };
+        console.log("Updated SpaceNode:", updatedNode);
         setNodes((ns) => ns.map((n) => (n.id === spaceNode.id ? updatedNode : n)));
     }
   };

@@ -4,6 +4,8 @@ import { Handle, Position } from 'reactflow';
 
 const SpaceNode: React.FC<any> = ({ data }) => {
     data = data || {};
+    console.log("SpaceNode received data:", data);
+
     const [renderKey, setRenderKey] = useState(Math.random());
     const prevDataRef = useRef(data);
 
