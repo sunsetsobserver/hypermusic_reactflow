@@ -4,6 +4,8 @@ import { Handle, Position } from 'reactflow';
 const SpaceNode: React.FC<any> = ({ data }) => {
     // Ensure data is defined and dimensions is always an array
     const dimensions = data?.dimensions || [];
+
+    console.log("SpaceNode Received Data:", dimensions);
   
     // Create the combined object
     const combinedDimensions = dimensions.reduce((acc: Record<string, any[]>, dimension: { dimensionName: string, dimensionValues: string }) => {
