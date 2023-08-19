@@ -33,7 +33,9 @@ const initialEdges: Edge[] = [];
     const handleDimensionChange = (dimensionName: string, dimensionValues: string) => {
       setNodes((prevNodes) => {
           return prevNodes.map((node) => {
-              if (node.type === 'space') {
+              // Check if there's an edge connecting this node to the edited DimensionNode
+              const isConnected = edges.some(edge => edge.source === dimensionName && edge.target === node.id);
+              if (node.type === 'space' && isConnected) {
                   const parsedDimensionValues = JSON.parse(dimensionValues);
                   const updatedDimensions = {
                       ...(node.data.dimensions || {}),
@@ -50,21 +52,20 @@ const initialEdges: Edge[] = [];
               return node;
           });
       });
-      console.log("Nodes after handleDimensionChange:", nodes);
-    };
+  };  
 
   const onConnect = (params: Connection | Edge) => {
     setEdges((eds) => addEdge(params, eds));
-
     setNodes((prevNodes) => {
-        return prevNodes.map((node) => {
+        const updatedNodes = prevNodes.map((node) => {
             if (node.id === params.target) {
                 const sourceNode = prevNodes.find((n) => n.id === params.source);
                 if (sourceNode && sourceNode.data) {
                     const existingDimensions = node.data?.dimensions || [];
+                    
                     const updatedDimensions = existingDimensions.concat({
                         dimensionName: sourceNode.data.dimensionName,
-                        dimensionValues: JSON.stringify(sourceNode.data.dimensionValues)
+                        dimensionValues: sourceNode.data.dimensionValues
                     });
                     return {
                         ...node,
@@ -74,8 +75,8 @@ const initialEdges: Edge[] = [];
             }
             return node;
         });
+        return updatedNodes; // Return the updated nodes array
     });
-    console.log("Nodes after onConnect:", nodes);
   };
 
   return (
