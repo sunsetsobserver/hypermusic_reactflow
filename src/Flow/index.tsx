@@ -47,6 +47,10 @@ function Flow() {
           data: { dimensions: updatedDimensions }
         };
         setNodes((ns) => ns.map((n) => (n.id === targetNode.id ? updatedNode : n)));
+
+        console.log("Updated Dimensions:", updatedDimensions);
+        console.log("Updated Node:", updatedNode);
+
       }
 
       console.log("onConnect triggered");
@@ -61,7 +65,6 @@ function Flow() {
   return (
     <div className="Flow">
       <ReactFlow
-        key={Math.random()}  
         nodes={nodes}
         onNodesChange={onNodesChange}
         edges={edges}

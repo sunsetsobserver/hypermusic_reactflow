@@ -16,6 +16,11 @@ const DimensionNode: React.FC<any> = ({ isConnectable, data }) => {
         }
     };
 
+    console.log("DimensionNode Data:", {
+        dimensionName: dimensionName,
+        dimensionValues: dimensionValues
+    });
+      
     return (
         <div className="dimensionNode">
             {isEditingDimension ? (
