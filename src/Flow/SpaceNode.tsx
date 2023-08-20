@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Handle, Position } from 'reactflow';
 
 const SpaceNode: React.FC<any> = ({ data }) => {
+    
     console.log("Data received by SpaceNode:", data);
 
     data = data || {};
